@@ -25,7 +25,7 @@ export function AnimatedModalDemo() {
           <span className="group-hover/modal-btn:translate-x-40 text-center transition duration-500">
             Book your flight
           </span>
-          ▬
+          
         </ModalTrigger>
         <ModalBody>
           <ModalContent>

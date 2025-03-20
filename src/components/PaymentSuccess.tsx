@@ -4,9 +4,15 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Home } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+
 
 export default function PaymentSuccess() {
   const [counter, setCounter] = useState(10);
+  const router=useRouter()
+  
+
   
   // Auto-redirect countdown
   useEffect(() => {
@@ -14,6 +20,7 @@ export default function PaymentSuccess() {
     if (counter === 0) {
       // Replace with your actual redirect logic
       console.log("Redirecting to dashboard...");
+      router.push("/dashboard")
       // window.location.href = "/dashboard";
     }
     return () => clearInterval(timer);
@@ -68,7 +75,6 @@ export default function PaymentSuccess() {
             className="text-gray-600 mb-6"
           >
             Your transaction has been completed successfully.
-            We've sent a confirmation email to your inbox.
           </motion.p>
           
           {/* Transaction Details */}
@@ -79,16 +85,7 @@ export default function PaymentSuccess() {
             className="bg-gray-50 rounded-lg p-4 mb-6"
           >
             <div className="flex justify-between mb-2">
-              <span className="text-gray-500">Transaction ID:</span>
-              <span className="font-medium">TXN-2025030201</span>
-            </div>
-            <div className="flex justify-between mb-2">
-              <span className="text-gray-500">Amount:</span>
-              <span className="font-medium">$149.99</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Date:</span>
-              <span className="font-medium">March 2, 2025</span>
+              <span className="text-gray-500">upgrade the plan to get the best from maxmail services</span>
             </div>
           </motion.div>
           
@@ -102,7 +99,7 @@ export default function PaymentSuccess() {
             className="mb-4"
           >
             <button 
-              onClick={() => window.location.href = "/dashboard"} 
+              onClick={() => router.push("/dashboard")} 
               className="group w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 flex items-center justify-center"
             >
               Go to Dashboard
@@ -123,7 +120,7 @@ export default function PaymentSuccess() {
             transition={{ delay: 0.8 }}
           >
             <button 
-              onClick={() => window.location.href = "/"} 
+              onClick={() => router.push("/")} 
               className="text-gray-600 hover:text-indigo-600 transition-colors duration-200 flex items-center justify-center mx-auto"
             >
               <Home size={16} className="mr-1" />

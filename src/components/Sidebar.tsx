@@ -7,13 +7,25 @@ import {
   ChevronRight, ChevronLeft, Menu, X, User, Bell, PlusCircle
 } from 'lucide-react';
 import Link from 'next/link';
+import share from '@/lib/shareComponents';
+import { useRouter } from 'next/navigation';
 
-const Sidebar = () => {
+
+const Sidebar: React.FC = () => {
   const [expanded, setExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(5);
   const [activeItem, setActiveItem] = useState('inbox');
+  const router = useRouter()
+
+  interface SidebarProps {
+    onButtonClick: (component: string) => void;
+  }
+
+  const setEmailFo=share().setEmailFo
+  // const setInbox=share().setInbox
+  // const setSendbox=share().setSendbox
   
   // Check if on mobile device
   useEffect(() => {
@@ -134,6 +146,7 @@ const Sidebar = () => {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             className="flex items-center justify-center w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-md text-white font-medium shadow-md"
+            onClick={()=>router.push("/dashboard/EmailForm")}
           >
             <PlusCircle size={16} />
             {(expanded || (isMobile && mobileOpen)) && (
@@ -168,7 +181,11 @@ const Sidebar = () => {
             {navItems.map((item) => (
               <motion.li key={item.id} whileHover="hover" variants={itemHoverVariants}>
                 <button
-                  onClick={() => setActiveItem(item.id)}
+                  onClick={() =>{
+                    setActiveItem(item.id)
+                    if(item.id==="inbox") router.push("/dashboard")
+                    else if(item.id==="sent") router.push("/dashboard/Sendbox");
+                  }}
                   className={`w-full flex items-center px-4 py-3 transition-colors ${
                     activeItem === item.id ? 'bg-indigo-600 text-white' : 'text-gray-black '
                   }`}
@@ -217,8 +234,8 @@ const Sidebar = () => {
               <p className="text-xs uppercase text-gray-500 font-semibold tracking-wider mb-2">Labels</p>
               <ul>
                 {labelItems.map((label) => (
-                  <motion.li key={label.id} whileHover="hover" variants={itemHoverVariants}>
-                    <button className="w-full flex items-center py-2 text-black dark:text-white text-sm">
+                  <motion.li key={label.id} whileHover="hover" variants={itemHoverVariants} >
+                    <button className="w-full flex items-center py-2 text-black dark:text-white text-sm" >
                       <span
                         className="w-3 h-3 rounded-full mr-3"
                         style={{ backgroundColor: label.color }}
