@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 
 const SendBox = ({ sentEmails = [] }) => {
+  
   const [selectedEmail, setSelectedEmail] = useState(null);
 
   const handleEmailClick = (email) => {

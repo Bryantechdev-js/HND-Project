@@ -13,7 +13,7 @@ export default function PricingPage() {
   const plans = {
     weekly: {
       title: 'Weekly Plan',
-      price: 9.99,
+      price: 5000,
       momo:"https://pay.lygosapp.com//link/8986c14a-947f-4ab8-9bc9-228a1e5f25ef",
       stripe:"https://buy.stripe.com/test_7sIeVe9bVa4NffydQT",
       features: [
@@ -25,7 +25,7 @@ export default function PricingPage() {
     },
     monthly: {
       title: 'Monthly Plan',
-      price: 29.99,
+      price: 15000,
       momo:"https://pay.lygosapp.com//link/75a9cdcb-f497-4664-9163-aee1f4b49b68",
       stripe:"https://buy.stripe.com/test_4gwcN6bk3el32sM3cd",
       features: [
@@ -38,7 +38,7 @@ export default function PricingPage() {
     },
     yearly: {
       title: 'Yearly Plan',
-      price: 299.99, // Save ~$60 compared to monthly
+      price: 150000, // Save ~$60 compared to monthly
       momo:"https://pay.lygosapp.com//link/f69bba4f-1f22-4178-9208-7e242d46498c",
       stripe:"https://buy.stripe.com/test_cN2aEY0Fp7WFd7q6oq",
       features: [
@@ -138,7 +138,7 @@ export default function PricingPage() {
                   <div className="mb-8">
                     <h3 className="text-xl font-bold dark:text-black text-black mb-2">{plan.title}</h3>
                     <div className="flex items-baseline">
-                      <span className="text-4xl font-extrabold  dark:text-black text-black">${plan.price}</span>
+                      <span className="text-4xl font-extrabold  dark:text-black text-black">{plan.price} FCFA</span>
                       <span className="ml-2 text-white dark:text-black">
                         {planKey === 'weekly' ? '/week' : planKey === 'monthly' ? '/month' : '/year'}
                       </span>

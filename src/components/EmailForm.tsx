@@ -1,11 +1,15 @@
 "use client"
 
+import { creatEmails } from '@/action/action';
+import { useAuth } from '@clerk/nextjs';
+import { getAuth } from '@clerk/nextjs/server';
 import { Files } from 'lucide-react';
 // components/EmailForm.jsx
 import React, { useState } from 'react';
 
 const EmailForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
+    from:useAuth().actor,
     to: '',
     cc: '',
     bcc: '',
@@ -93,6 +97,7 @@ const EmailForm = ({ onSubmit }) => {
       
       // Reset form after successful submission
       setFormData({
+        from:useAuth().actor,
         to: '',
         cc: '',
         bcc: '',
@@ -116,7 +121,7 @@ const EmailForm = ({ onSubmit }) => {
         <h2 className="text-xl font-bold text-white">Compose New Email</h2>
       </div>
       
-      <form onSubmit={handleSubmit} className="p-6">
+      <form action={creatEmails} className="p-6">
         <div className="space-y-4">
           {/* To Field */}
           <div>
