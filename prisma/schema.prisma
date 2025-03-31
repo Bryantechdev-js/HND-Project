@@ -11,7 +11,7 @@ datasource db {
 }
 
 
-model email{
+model Email{
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   from String
   to String
@@ -30,7 +30,9 @@ model email{
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId  
    name String
-   email String
+   email String @unique
+   password String
+   login Boolean @default(false)
    created DateTime @default(now())
    updated DateTime @default(now())
 }

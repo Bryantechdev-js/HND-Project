@@ -1,9 +1,10 @@
+import UserSettingsForm from '@/components/SetingsCompunent'
 import React from 'react'
 
 function page() {
   return (
     <div>
-      sigup
+      < UserSettingsForm/>
     </div>
   )
 }

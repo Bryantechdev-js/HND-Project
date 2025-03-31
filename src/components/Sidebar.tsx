@@ -9,6 +9,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { prisma } from '@/lib/db';
+import UserInfo from './UserInfo';
 
 const Sidebar = () => {
   // const userEmails=await prisma.email.findMany()
@@ -153,15 +154,7 @@ const Sidebar = () => {
           )}
         </div>
 
-        <div className="userinfo w-full h-auto px-5 bg-slate-100 shadow-lg flex space-x-5">
-          <div className="userImage w-8  rounded-full flex justify-center items-center">
-            B
-          </div>
-          <div>
-            <li>bryantech</li>
-            <p className="emails">bryantech@gmail.com</p>
-          </div>
-        </div>
+       <UserInfo/>
         
         {/* Create Email Button */}
         <div className="px-4 pt-4">
@@ -255,7 +248,7 @@ const Sidebar = () => {
           >
             <Settings size={16} />
             {(expanded || (isMobile && mobileOpen)) && (
-              <span className="ml-2">Settings</span>
+              <span className="ml-2" onClick={()=>router.push("/dashboard/Setings")}>Settings</span>
             )}
           </motion.button>
         </div>

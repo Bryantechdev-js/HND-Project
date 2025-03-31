@@ -20,14 +20,14 @@ export default function PaymentSuccess() {
     if (counter === 0) {
       // Replace with your actual redirect logic
       console.log("Redirecting to dashboard...");
-      router.push("/dashboard")
+      router.push("/login")
       // window.location.href = "/dashboard";
     }
     return () => clearInterval(timer);
   }, [counter]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-white to-slate-100 p-4">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -99,7 +99,7 @@ export default function PaymentSuccess() {
             className="mb-4"
           >
             <button 
-              onClick={() => router.push("/dashboard")} 
+              onClick={() => router.push("/login")} 
               className="group w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 flex items-center justify-center"
             >
               Go to Dashboard

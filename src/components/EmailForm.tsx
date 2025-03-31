@@ -143,6 +143,17 @@ const EmailForm = ({ onSubmit }) => {
               type="text"
               id="to"
               name="to"
+              value={formData.from}
+              onChange={handleChange}
+              className={`mt-1 block w-full px-3 py-2 border ${
+                errors.to ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+              placeholder="recipient@example.com"
+            />
+            <input
+              type="text"
+              id="to"
+              name="to"
               value={formData.to}
               onChange={handleChange}
               className={`mt-1 block w-full px-3 py-2 border ${
