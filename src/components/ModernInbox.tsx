@@ -1,45 +1,62 @@
-import React from 'react';
-import { getUserEmails } from '@/lib/email';
-import { prisma } from '@/lib/db';
-import EmailCard from './EmailCard';
+"use client";
 
-const ModernInbox = async () => {
-  // Get all currently logged-in users
-  const users = await prisma.user.findMany({
-    where: { login: true },
-  });
+import React, { useEffect, useState } from "react";
+import EmailCard from "./EmailCard";
+import { toast } from "react-toastify";
 
-  // Handle case where no users are logged in
-  if (users.length === 0) {
+const ModernInbox = () => {
+  const [emails, setEmails] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchInbox = async () => {
+      const token = localStorage.getItem("auth_token");
+      if (!token) {
+        toast.error("User not authenticated");
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/inbox", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          setEmails(data.emails);
+        } else {
+          toast.error(data.error || "Failed to fetch inbox");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Server error while fetching inbox");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInbox();
+  }, []);
+
+  if (loading) {
     return (
       <div className="w-full h-screen flex items-center justify-center text-gray-500">
-        No users are currently logged in.
+        Loading your inbox...
       </div>
     );
   }
 
-  // Collect emails of all logged-in users
-  const loggedInEmails = users.map((user) => user.email);
-
-  // Fetch emails for all logged-in users
-  const userEmails = await prisma.email.findMany({
-    where: {
-      to: { in: loggedInEmails }, // Fetch emails where "to" matches any logged-in user's email
-    },
-  });
-
-  // Handle case where no emails exist for logged-in users
-  if (userEmails.length === 0) {
+  if (emails.length === 0) {
     return (
       <div className="w-full h-screen flex items-center justify-center text-gray-500">
-        No emails received.
+        No emails in your inbox.
       </div>
     );
   }
 
   return (
-    <div className="w-full h-screen flex flex-col space-y-5 p-5">
-      {userEmails.map((email) => (
+    <div className="w-full h-screen flex flex-col space-y-5 p-5 overflow-y-auto">
+      {emails.map((email: any) => (
         <EmailCard key={email.id} email={email} index={email.id} />
       ))}
     </div>

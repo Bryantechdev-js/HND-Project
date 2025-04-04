@@ -6,6 +6,7 @@ import { getAuth } from '@clerk/nextjs/server';
 import { Files } from 'lucide-react';
 // components/EmailForm.jsx
 import React, { useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 
 const EmailForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -124,6 +125,13 @@ const EmailForm = ({ onSubmit }) => {
       <form action={creatEmails} className="p-6">
         <div className="space-y-4">
           {/* To Field */}
+          <div className="from">
+            <label htmlFor="from">from:</label>
+            <br />
+            <input type="text" name="from" id="from" className={`mt-1 block w-full px-3 py-2 border ${
+                errors.from ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`} />
+          </div>
           <div>
             <div className="flex items-center justify-between">
               <label htmlFor="to" className="block text-sm font-medium text-gray-700">
@@ -139,17 +147,7 @@ const EmailForm = ({ onSubmit }) => {
                 }
               </button>
             </div>
-            <input
-              type="text"
-              id="to"
-              name="to"
-              value={formData.from}
-              onChange={handleChange}
-              className={`mt-1 block w-full px-3 py-2 border ${
-                errors.to ? 'border-red-500' : 'border-gray-300'
-              } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-              placeholder="recipient@example.com"
-            />
+            
             <input
               type="text"
               id="to"
@@ -272,6 +270,7 @@ const EmailForm = ({ onSubmit }) => {
             </button>
           </div>
         </div>
+        <ToastContainer/>
       </form>
     </div>
   );

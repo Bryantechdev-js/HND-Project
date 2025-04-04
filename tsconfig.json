@@ -16,7 +16,17 @@
     "plugins": [
       {
         "name": "next"
+      },
+      {
+        "compilerOptions": {
+          "types": ["node", "speech-recognition"]
+        },
+        "include": [
+          "src/**/*",
+          "speech-recognition.d.ts"
+        ]
       }
+      
     ],
     "paths": {
       "@/*": ["./src/*"]

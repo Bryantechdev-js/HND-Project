@@ -1,46 +1,36 @@
-import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
 
-// const prisma = new PrismaClient();
+const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key";
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    console.log("Received login request:", body); // Debugging
+    const { email, password } = await req.json();
 
-    const { email, password } = body;
-
-    if (!email || !password) {
-      return NextResponse.json({ message: "Email and password are required." }, { status: 400 });
-    }
-
-    // Fetch user from database
     const user = await prisma.user.findUnique({
-      where: { email},
+      where: { email },
     });
 
-    console.log("User fetched from DB:", user); // Debugging
-
     if (!user) {
-      return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Compare password
-    const isMatch = await bcrypt.compare(password, user.password);
-    console.log("Password match:", isMatch); // Debugging
-
-    if (!isMatch) {
-      return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
+    // Verify password
+    // Assuming you're using bcrypt to hash passwords
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
 
-    return NextResponse.json({ message: "Login successful!", user });
+    // Generate JWT
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
+
+    // Send token to client
+    return NextResponse.json({ token });
   } catch (error) {
-    console.error("🔥 Login error:", error); // Log the actual error
-    return NextResponse.json(
-      { message: "Internal Server Error", error: String(error) },
-      { status: 500 }
-    );
+    console.error("Error during login:", error);
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }

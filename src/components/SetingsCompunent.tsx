@@ -366,23 +366,16 @@ export default function UserSettingsForm() {
             transition={{ delay: 0.4 }}
             className="bg-gray-50 rounded-lg p-6 flex items-center justify-between"
           >
-            <div className="flex items-center">
-              {userData.notificationsEnabled ? (
-                <Bell className="mr-3 text-yellow-600" />
-              ) : (
-                <BellOff className="mr-3 text-gray-500" />
-              )}
-              <div>
-                <h3 className="text-lg font-semibold">
-                  Notifications
-                </h3>
-                <p className="text-sm text-gray-600">
-                  {userData.notificationsEnabled 
-                    ? 'Notifications are currently enabled' 
-                    : 'Notifications are currently disabled'}
-                </p>
-              </div>
-            </div>
+                      <button
+              onClick={async () => {
+                await fetch("/api/logout");
+                window.location.reload();
+              }}
+              className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+            >
+              Logout
+            </button>
+
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleToggleNotifications}

@@ -188,11 +188,18 @@ const Sidebar = () => {
                 <button
                   onClick={() => {
                     setActiveItem(item.id);
-                    router.push(
-                      item.id === "inbox" 
-                        ? "/dashboard" 
-                        : item.id==="send"? "/dashboard/Sendbox":"/EmailForm"
-                    );
+                    if(item.id==="inbox"){
+                      
+                      router.push(
+                        "/dashboard"
+                      );
+                    }
+
+                    if(item.id === "send"){
+                      router.push("/dashboard/Sendbox")
+                    }
+
+                  
                   }}
                   className={`w-full flex items-center px-4 py-3 
                     transition-colors 
