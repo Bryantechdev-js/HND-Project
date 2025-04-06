@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { prisma } from '@/lib/db';
 import UserInfo from './UserInfo';
+import { toast } from 'react-toastify';
 
 const Sidebar = () => {
   // const userEmails=await prisma.email.findMany()
@@ -81,6 +82,10 @@ const Sidebar = () => {
   const toggleMobileSidebar = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  // Logout function (for example in a logout button)
+
+
 
   return (
     <div className="w-[250px] h-screen">
@@ -195,7 +200,7 @@ const Sidebar = () => {
                       );
                     }
 
-                    if(item.id === "send"){
+                    if(item.id === "sent"){
                       router.push("/dashboard/Sendbox")
                     }
 

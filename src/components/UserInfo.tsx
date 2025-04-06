@@ -12,7 +12,7 @@ const UserInfo = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("auth_token");
+      const token = sessionStorage.getItem("auth_token");
 
       if (!token) return;
 
@@ -26,12 +26,12 @@ const UserInfo = () => {
         const data = await res.json();
         setUser(data.user);
       } else {
-        localStorage.removeItem("auth_token"); // Remove invalid token
+        sessionStorage.removeItem("auth_token"); // Remove invalid token
       }
     };
 
     fetchUser();
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   if (!user) {
     return (

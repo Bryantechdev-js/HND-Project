@@ -216,7 +216,7 @@ export default function ContactPage() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} method="POST" action="https://formsubmit.co/bryantech.dev@gmail.com" className="relative dark:bg-slate-100 shadow-sm z-10 space-y-6">
+              <form onSubmit={handleSubmit} action="https://usebasin.com/f/6dca096afbf8" method="POST" className="relative dark:bg-slate-100 shadow-sm z-10 space-y-6">
                 {/* Name Field */}
                 <div>
                   <label 

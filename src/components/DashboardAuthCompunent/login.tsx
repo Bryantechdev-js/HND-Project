@@ -39,8 +39,8 @@ const ModernLoginForm = () => {
       const data = await response.json();
   
       if (response.ok) {
-        // Store the JWT in localStorage
-        localStorage.setItem("auth_token", data.token);
+        // Store the JWT in sessionStorage (tab-specific)
+        sessionStorage.setItem("auth_token", data.token);
         toast.success("🎉 Login successful!", { autoClose: 2000 });
         setTimeout(() => router.push("/dashboard"), 2000);
       } else {
@@ -52,6 +52,7 @@ const ModernLoginForm = () => {
       setLoading(false);
     }
   };
+  
   
   
   

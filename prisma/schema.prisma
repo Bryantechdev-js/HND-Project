@@ -11,20 +11,24 @@ datasource db {
 }
 
 
-model Email{
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  from String
-  to String
-  subject String
-  body String
-  date DateTime @default(now())
-  read Boolean @default(false)
-  starred Boolean @default(false)
-  expanded Boolean @default(false)
-  replying Boolean @default(false)
-  send Boolean @default(false)
-  recieve Boolean @default(false)
+model Email {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  from      String
+  to        String
+  cc        String?   // <-- optional
+  bcc       String?   // <-- optional
+  subject   String
+  body      String
+  draft     Boolean @default(false)
+  date      DateTime @default(now())
+  read      Boolean  @default(false)
+  starred   Boolean  @default(false)
+  expanded  Boolean  @default(false)
+  replying  Boolean  @default(false)
+  send      Boolean  @default(false)
+  recieve   Boolean  @default(false)
 }
+
 
 
 model User {
