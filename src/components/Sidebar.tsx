@@ -230,18 +230,7 @@ const Sidebar = () => {
                     )}
                   </AnimatePresence>
                   
-                  {item.count > 0 && (
-                    <motion.span
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      className={`ml-auto text-xs px-2 py-1 rounded-full 
-                        ${activeItem === item.id 
-                          ? 'bg-white text-indigo-600' 
-                          : 'bg-indigo-500 text-white'}`}
-                    >
-                      {item.count}
-                    </motion.span>
-                  )}
+  
                 </button>
               </motion.li>
             ))}

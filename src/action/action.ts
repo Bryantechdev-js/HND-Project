@@ -7,66 +7,59 @@ import { cookies } from "next/headers";
 import { toast } from "react-toastify";
 import jwt from "jsonwebtoken";
 
-
-
-// action.js
-export const creatEmails = async (formData: FormData) => {
-  const from = formData.get("from") as string;
-  const to = formData.get("to") as string;
-  const subject = formData.get("subject") as string;
-  const body = formData.get("message") as string;
-
-  try {
-    const success = await prisma.email.create({
-      data: {
-        from,
-        to,
-        subject,
-        body,
-      },
-    });
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
+const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key";
 
 
 
+export const creatEmails = async (formData:FormData)=>{
+  
 
-// app/actions/user.ts
+  const from=formData.get("from") as string
+  const to=formData.get("to") as string
+  const subject = formData.get("subject") as string
+  const body = formData.get("message") as string
+
+  const succes=await prisma.email.create({
+    data:{
+      from,
+      to,
+      subject,
+      body
+    }
+  })
+
+  
+}
 
 
 
 
-export const updateUserSettings = async (formData: FormData) => {
+
+export async function updateUserSettings(formData: FormData) {
   const token = formData.get("token") as string;
-
-  if (!token) throw new Error("Unauthorized");
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
-  const userId = decoded.id;
-
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const notificationsEnabled = formData.get("notificationsEnabled") === "true";
 
+  if (!token) throw new Error("No token provided");
+
+  // Decode userId from JWT
+  const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   await prisma.user.update({
-    where: { id: userId },
+    where: { id: decoded.userId },
     data: {
       name,
       email,
-      password,
-      login: true,
-      updated: new Date(),
-      // You can store `notificationsEnabled` in your schema if you add the field
+      password: hashedPassword,
+      notificationsEnabled,
     },
   });
-
-  return { success: true };
-};
+}
 
   
 
@@ -139,10 +132,4 @@ export const deleateEmails= async(id:string)=>{
             id
         }
     })
-
-    if(! deleatedEmails){
-        toast("could not deleate email")
-    }
-    toast("emails deleated")
-
 }

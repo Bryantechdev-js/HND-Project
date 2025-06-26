@@ -29,6 +29,7 @@ const testimonials = [
 
 const Testimonials = () => {
   const [ripplePosition, setRipplePosition] = useState({ x: 0, y: 0 });
+  
 
   // Function to handle ripple effect
   const createRipple = (e) => {

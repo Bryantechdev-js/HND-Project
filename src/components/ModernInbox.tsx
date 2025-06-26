@@ -78,7 +78,7 @@ const ModernInbox = () => {
         Loaded {emails.length} {emails.length === 1 ? "email" : "emails"}
       </div>
       {emails.map((email: any) => (
-        <EmailCard key={email.id} email={email} />
+        <EmailCard key={email.id} email={email} index={email.id} />
       ))}
     </div>
   );

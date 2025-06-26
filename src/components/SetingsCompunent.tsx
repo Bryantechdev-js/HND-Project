@@ -1,11 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import { Bell } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function UserSettingsForm() {
+  const router = useRouter();
+
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -16,7 +19,7 @@ export default function UserSettingsForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setUserData((prev) => ({
       ...prev,
@@ -24,7 +27,7 @@ export default function UserSettingsForm() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = sessionStorage.getItem("auth_token");
     if (!token) return toast.error("Unauthorized");
@@ -44,16 +47,18 @@ export default function UserSettingsForm() {
     form.append("name", userData.name);
     form.append("email", userData.email);
     form.append("password", userData.password);
-    form.append("notificationsEnabled", userData.notificationsEnabled.toString());
+    form.append(
+      "notificationsEnabled",
+      userData.notificationsEnabled.toString()
+    );
 
     try {
-      const res = await fetch("/api/updateUserProfile", {
+      const res = await fetch("/api/update-user", {
         method: "POST",
         body: form,
       });
 
       const data = await res.json();
-      console.log(data)
       if (data.success) {
         toast.success("✅ Account updated successfully!");
       } else {
@@ -64,6 +69,23 @@ export default function UserSettingsForm() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleLogout = async () => {
+    sessionStorage.removeItem("auth_token");
+
+    try {
+      await fetch("/api/logout");
+    } catch (error) {
+      console.error("Logout API failed", error);
+    }
+
+    toast.success("👋 Logged out successfully!");
+    router.push("/login");
+  };
+
+  const goToAnalysis = () => {
+    router.push("/dashboard/analysisBoard");
   };
 
   return (
@@ -143,6 +165,21 @@ export default function UserSettingsForm() {
           {isSubmitting ? "Saving..." : "Save Changes"}
         </button>
       </form>
+
+      <div className="mt-6 flex justify-between gap-4">
+        <button
+          onClick={goToAnalysis}
+          className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition"
+        >
+          📊 Email Analysis
+        </button>
+        <button
+          onClick={handleLogout}
+          className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition"
+        >
+          🚪 Logout
+        </button>
+      </div>
 
       <ToastContainer />
     </div>

@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { creatEmails } from "@/action/action";
 
 const EmailForm = () => {
   const initialForm = {
@@ -21,7 +20,7 @@ const EmailForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCcBcc, setShowCcBcc] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
@@ -30,7 +29,7 @@ const EmailForm = () => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: any = {};
     if (!formData.to.trim()) {
       newErrors.to = "Recipient email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.to)) {
@@ -42,23 +41,52 @@ const EmailForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e, isDraft = false) => {
+  const handleSubmit = async (e: React.FormEvent, isDraft = false) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
+
+    const token = sessionStorage.getItem("auth_token"); // Changed from localStorage to sessionStorage
+    if (!token) {
+      toast.error("You are not logged in!");
+      return;
+    }
 
     setIsSubmitting(true);
 
-    const form = new FormData(e.target);
-    const result = await creatEmails(form);
+    const payload = {
+      to: formData.to,
+      cc: formData.cc || null,
+      bcc: formData.bcc || null,
+      subject: formData.subject,
+      body: formData.message,
+      draft: isDraft,
+    };
 
-    if (result.success) {
-      toast.success("Email sent successfully!");
-    } else {
-      toast.error(`Failed to send email: ${result.error}`);
+    try {
+      const res = await fetch("/api/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        toast.success(isDraft ? "Draft saved!" : "Email sent!");
+        setFormData(initialForm);
+      } else {
+        toast.error(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      toast.error("Something went wrong while sending the email.");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   return (
@@ -66,12 +94,19 @@ const EmailForm = () => {
       <div className="bg-blue-600 py-4 px-6 text-white font-bold text-xl">
         Compose Email
       </div>
-      <form onSubmit={handleSubmit} className="p-6 space-y-4">
+      <form onSubmit={(e) => handleSubmit(e, false)} className="p-6 space-y-4">
         <div className="from">
           <label htmlFor="from">From:</label>
           <br />
-          <input type="text" name="from" className="w-full border p-2 rounded" />
+          <input
+            type="text"
+            name="from"
+            className="w-full border p-2 rounded bg-gray-100"
+            placeholder="Auto-detected from backend"
+            disabled
+          />
         </div>
+
         <div>
           <label className="block">To:</label>
           <input
@@ -131,7 +166,7 @@ const EmailForm = () => {
           <label className="block">Message:</label>
           <textarea
             name="message"
-            rows="6"
+            rows={6}
             value={formData.message}
             onChange={handleChange}
             className="w-full border p-2 rounded"
@@ -144,7 +179,7 @@ const EmailForm = () => {
         <div className="flex justify-end space-x-3">
           <button
             type="button"
-            onClick={(e) => handleSubmit(e, true)}
+            onClick={(e) => handleSubmit(e as any, true)}
             className="px-4 py-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-50"
           >
             Save Draft
